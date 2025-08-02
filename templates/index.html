@@ -1,27 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Lista de Alumnos</title>
+  <meta charset="UTF-8" />
+  <title>CRUD de Alumnos</title>
 </head>
 <body>
-    <h1>Alumnos</h1>
-    <a href="/create">Crear Alumno</a>
-    <table border="1">
-        <tr>
-            <th>ID</th><th>Nombre</th><th>Apellido</th><th>Edad</th><th>Acciones</th>
-        </tr>
-        {% for a in alumnos %}
-        <tr>
-            <td>{{ a[0] }}</td>
-            <td>{{ a[1] }}</td>
-            <td>{{ a[2] }}</td>
-            <td>{{ a[3] }}</td>
-            <td>
-                <a href="/update/{{ a[0] }}">Editar</a> |
-                <a href="/delete/{{ a[0] }}">Eliminar</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
+  <h1>Gestión de Alumnos</h1>
+
+  <form id="formulario">
+    <input type="hidden" id="id">
+    <input type="text" id="nombre" placeholder="Nombre" required>
+    <input type="text" id="apellido" placeholder="Apellido" required>
+    <input type="number" id="edad" placeholder="Edad" required>
+    <button type="submit">Guardar</button>
+  </form>
+
+  <h2>Lista de Alumnos</h2>
+  <ul id="lista"></ul>
+
+  <script src="app.js"></script>
 </body>
 </html>

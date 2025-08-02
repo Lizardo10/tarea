@@ -1,69 +1,41 @@
-from flask import Flask, render_template, request, redirect, url_for
-from db_config import get_connection
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+import sqlite3
 
 app = Flask(__name__)
+CORS(app)
 
-# Mostrar todos los alumnos
-@app.route('/')
-def index():
-    conn = get_connection()
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM alumno")
-    alumnos = cur.fetchall()
-    cur.close()
-    conn.close()
-    return render_template('index.html', alumnos=alumnos)
+from db import init_db, get_all_alumnos, get_alumno, insert_alumno, update_alumno, delete_alumno
 
-# Crear un nuevo alumno
-@app.route('/create', methods=['GET', 'POST'])
-def create():
-    if request.method == 'POST':
-        nombre = request.form['nombre']
-        apellido = request.form['apellido']
-        edad = request.form['edad']
+init_db()
 
-        conn = get_connection()
-        cur = conn.cursor()
-        cur.execute("INSERT INTO alumno (nombre, apellido, edad) VALUES (%s, %s, %s)", 
-                    (nombre, apellido, edad))
-        conn.commit()
-        cur.close()
-        conn.close()
-        return redirect(url_for('index'))
-    return render_template('create.html')
+@app.route('/api/alumnos', methods=['GET'])
+def obtener_alumnos():
+    return jsonify(get_all_alumnos())
 
-# Actualizar un alumno
-@app.route('/update/<int:id>', methods=['GET', 'POST'])
-def update(id):
-    conn = get_connection()
-    cur = conn.cursor()
-    if request.method == 'POST':
-        nombre = request.form['nombre']
-        apellido = request.form['apellido']
-        edad = request.form['edad']
-        cur.execute("UPDATE alumno SET nombre=%s, apellido=%s, edad=%s WHERE id=%s",
-                    (nombre, apellido, edad, id))
-        conn.commit()
-        cur.close()
-        conn.close()
-        return redirect(url_for('index'))
-    else:
-        cur.execute("SELECT * FROM alumno WHERE id = %s", (id,))
-        alumno = cur.fetchone()
-        cur.close()
-        conn.close()
-        return render_template('update.html', alumno=alumno)
+@app.route('/api/alumnos/<int:id>', methods=['GET'])
+def obtener_alumno(id):
+    alumno = get_alumno(id)
+    if alumno:
+        return jsonify(alumno)
+    return jsonify({'error': 'No encontrado'}), 404
 
-# Eliminar un alumno
-@app.route('/delete/<int:id>')
-def delete(id):
-    conn = get_connection()
-    cur = conn.cursor()
-    cur.execute("DELETE FROM alumno WHERE id = %s", (id,))
-    conn.commit()
-    cur.close()
-    conn.close()
-    return redirect(url_for('index'))
+@app.route('/api/alumnos', methods=['POST'])
+def crear_alumno():
+    data = request.json
+    insert_alumno(data['nombre'], data['apellido'], data['edad'])
+    return jsonify({'mensaje': 'Alumno creado'}), 201
+
+@app.route('/api/alumnos/<int:id>', methods=['PUT'])
+def actualizar_alumno(id):
+    data = request.json
+    update_alumno(id, data['nombre'], data['apellido'], data['edad'])
+    return jsonify({'mensaje': 'Alumno actualizado'})
+
+@app.route('/api/alumnos/<int:id>', methods=['DELETE'])
+def eliminar_alumno(id):
+    delete_alumno(id)
+    return jsonify({'mensaje': 'Alumno eliminado'})
 
 if __name__ == '__main__':
     app.run(debug=True)

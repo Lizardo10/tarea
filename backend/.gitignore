@@ -1,1 +1,22 @@
+# Entorno virtual (ajusta si usas otro nombre)
+venv/
+env/
+ENV/
+
+# Archivos de configuración local con secretos
 .env
+.env.*
+
+# Archivos Python compilados
+*.pyc
+__pycache__/
+
+# Bases de datos SQLite locales (si usas)
+*.db
+
+# Archivos de logs
+*.log
+
+# Carpetas de caché o temporales
+*.egg-info/
+.cache/

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Alumnos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>📚 Gestión de Alumnos</h1>
+
+    <section class="form-section">
+        <h2>Agregar Alumno</h2>
+        <input type="text" id="nombre" placeholder="Nombre">
+        <input type="number" id="edad" placeholder="Edad">
+        <input type="text" id="curso" placeholder="Curso">
+        <button onclick="crearAlumno()">Agregar</button>
+    </section>
+
+    <section class="search-section">
+        <input type="text" id="buscar" placeholder="Buscar por nombre" oninput="obtenerAlumnos()">
+    </section>
+
+    <section class="table-section">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Edad</th>
+                    <th>Curso</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-alumnos"></tbody>
+        </table>
+    </section>
+
+    <script src="app.js"></script>
+</body>
+</html>

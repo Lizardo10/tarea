@@ -2,7 +2,7 @@ const API_URL = "http://127.0.0.1:5000/alumnos";
 
 async function obtenerAlumnos() {
     let search = document.getElementById("buscar").value;
-    let res = await fetch(`${API_URL}?search=${search}`);
+    let res = await fetch(`http://127.0.0.1:5000/alumnos/buscar?nombre=${search}`);
     let alumnos = await res.json();
 
     let tbody = document.getElementById("tabla-alumnos");
